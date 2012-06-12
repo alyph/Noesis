@@ -42,9 +42,12 @@ Shader "Custom/MapShader" {
 			half4 frag (v2f i) : COLOR
 			{
 				float4 texcol = tex2D (_MainTex, i.uv);
-				float2 palatteuv = tex2D (_ProvinceMap, i.uv).rg;
+				float2 palatteuv = tex2D (_ProvinceMap, i.uv).rg * 255 / 64;
 				float4 palcol = tex2D (_ProvincePalatte, palatteuv);
-				return half4 (texcol.rgb * (1 - palcol.a) + palcol.rgb * palcol.a, 1);
+				if (palcol.a > 0.5)
+					return texcol * 1.1;
+				else
+					return half4 (texcol.rgb * (1 - palcol.a) + palcol.rgb * palcol.a, 1);
 			}
 			ENDCG
 
